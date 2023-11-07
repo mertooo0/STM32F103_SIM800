@@ -26,8 +26,8 @@ char Command1[5]="AT\r\n",
 	 Command11[]="AT+CIPSPRT=0\r\n",
 	 Command12[]="AT+CIPSTART=\"TCP\",\"api.thingspeak.com\",\"80\"\r\n",
 	 Command13[]="AT+CIPSEND\r\n",
-	 Command14[]="GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=0\r\n",
-	 Command15[]="24\r\n",
+	 Command14[]="GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=25\r\n",
+	 Command15[]="\032\r\n",
 	 Command16[]="AT+CIPSHUT\r\n"
 ;
 //------------------------
@@ -56,69 +56,78 @@ uint8_t test2()
 void test3()
 {
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command1,strlen(Command1),100);
-	HAL_Delay(50);
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CGATT?
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command4,strlen(Command4),1000);
+	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command2,strlen(Command2),100);
-	HAL_Delay(50);
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSHUT
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command5,strlen(Command5),1000);
+	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command3,strlen(Command3),100);
-	HAL_Delay(50);
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSTATUS
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command6,strlen(Command6),1000);
+	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command4,strlen(Command4),100);
-	HAL_Delay(50);
-
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command5,strlen(Command5),100);
-	HAL_Delay(100);
-
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command6,strlen(Command6),100);
-	HAL_Delay(250);
-
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPMUX=0
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command7,strlen(Command7),100);
-	HAL_Delay(250);
+	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CSTT=\"internet\"
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command8,strlen(Command8),1000);
-	HAL_Delay(250);
+	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIICR
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command9,strlen(Command9),1000);
-	HAL_Delay(250);
+	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIFSR
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command10,strlen(Command10),1000);
-	HAL_Delay(250);
+	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command11,strlen(Command11),100);
-	HAL_Delay(250);
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSPRT=0
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command11,strlen(Command11),1000);
+	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command12,strlen(Command12),100);
-	HAL_Delay(250);
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSTART=\"TCP\",\"api.thingspeak.com\",\"80\"\r\n
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command12,strlen(Command12),1000);
+	HAL_Delay(1500);//
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command13,strlen(Command13),100);
-	HAL_Delay(250);
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSEND
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command13,strlen(Command13),1000);
+	HAL_Delay(1500);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command14,strlen(Command14),100);
-	HAL_Delay(250);
+	char buffer[120];
+	sprintf(buffer,"GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=%d\r\n",56);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command15,strlen(Command15),100);
-	HAL_Delay(1000);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command16,strlen(Command16),100);
-	HAL_Delay(100);
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//
+	HAL_UART_Transmit(&huart1,(uint8_t*)buffer,strlen(buffer),1000);
+	HAL_Delay(1500);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command15,strlen(Command15),1000);
+	HAL_Delay(1500);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command16,strlen(Command16),1000);
+	HAL_Delay(750);
+
+}
+
+
+void SIM800_Init()
+{
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command1,strlen(Command1),100);
+	HAL_Delay(750);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CPIN?
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command2,strlen(Command2),100);
+	HAL_Delay(750);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CREG?
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command3,strlen(Command3),100);
+	HAL_Delay(750);
 
 }
 /*
@@ -163,6 +172,23 @@ uint8_t Check_OK()
 			}
 		}
 
+
+		if(RxBuffer[i]=='R')//Check ERROR
+		{
+			if(RxBuffer[i+1]=='E')
+			{
+				if(RxBuffer[i+2]=='A')
+				{
+					if(RxBuffer[i+3]=='D')
+					{
+						if(RxBuffer[i+4]=='Y')
+						{
+							ans=2;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	return ans;

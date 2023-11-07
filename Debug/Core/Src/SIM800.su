@@ -1,4 +1,5 @@
 ../Core/Src/SIM800.c:35:9:test	16	static
 ../Core/Src/SIM800.c:47:9:test2	16	static
-../Core/Src/SIM800.c:56:6:test3	8	static
-../Core/Src/SIM800.c:133:9:Check_OK	16	static
+../Core/Src/SIM800.c:56:6:test3	128	static
+../Core/Src/SIM800.c:118:6:SIM800_Init	8	static
+../Core/Src/SIM800.c:142:9:Check_OK	16	static
