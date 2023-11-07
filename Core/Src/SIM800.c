@@ -53,14 +53,31 @@ uint8_t test2()
 	return ans;
 }
 
-void test3()
+
+void SIM800_Init()//HER BİR KOMUT İÇİN KONTROL MEKANİZMASI EKLENECEK
 {
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CGATT?
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSHUT --
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command5,strlen(Command5),1000);
+	HAL_Delay(750);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT -- iletişim var
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command1,strlen(Command1),100);
+	HAL_Delay(750);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CPIN? -- ready ise pin kodu istemiyor
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command2,strlen(Command2),100);
+	HAL_Delay(750);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CREG? --Ağ kayıtlı mı
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command3,strlen(Command3),100);
+	HAL_Delay(750);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CGATT? --internet bağlası (GPRS) var mı yok mu?
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command4,strlen(Command4),1000);
 	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSHUT
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSHUT --
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command5,strlen(Command5),1000);
 	HAL_Delay(750);
 
@@ -68,25 +85,35 @@ void test3()
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command6,strlen(Command6),1000);
 	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPMUX=0
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPMUX=0 --çoklu bağlantı modu devre dışı
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command7,strlen(Command7),100);
 	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CSTT=\"internet\"
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CSTT=\"internet\" -- vodafone apn ayarı
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command8,strlen(Command8),1000);
 	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIICR
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIICR -- GPRS Bağlantısı kurulmaya çalışılır.Başaralı bir şekilde kurulduğunda modül IP adresi alır.
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command9,strlen(Command9),1000);
 	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIFSR
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command10,strlen(Command10),1000);
-	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSPRT=0
+
+
+}
+
+
+void SIM800l_Send_Data(int val)
+{
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIFSR --
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command10,strlen(Command10),1000);
+	HAL_Delay(1000);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSPRT=0 --Seri port iletişimini devre dışı bırakır.Cihaz yalnızca AT komutları ile yönlendirilir.
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command11,strlen(Command11),1000);
-	HAL_Delay(750);
+	HAL_Delay(1000);
 
 	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSTART=\"TCP\",\"api.thingspeak.com\",\"80\"\r\n
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command12,strlen(Command12),1000);
@@ -97,7 +124,7 @@ void test3()
 	HAL_Delay(1500);
 
 	char buffer[120];
-	sprintf(buffer,"GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=%d\r\n",56);
+	sprintf(buffer,"GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=%d\r\n",val);
 
 
 	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//
@@ -114,21 +141,34 @@ void test3()
 
 }
 
-
-void SIM800_Init()
+void test4()
 {
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command1,strlen(Command1),100);
-	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CPIN?
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command2,strlen(Command2),100);
-	HAL_Delay(750);
 
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CREG?
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command3,strlen(Command3),100);
-	HAL_Delay(750);
 
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSTART=\"TCP\",\"api.thingspeak.com\",\"80\"\r\n
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command12,strlen(Command12),1000);
+	HAL_Delay(1500);//
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSEND
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command13,strlen(Command13),1000);
+	HAL_Delay(1500);
+
+	char buffer[120];
+	sprintf(buffer,"GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=%d\r\n",59);
+
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//
+	HAL_UART_Transmit(&huart1,(uint8_t*)buffer,strlen(buffer),1000);
+	HAL_Delay(1500);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command15,strlen(Command15),1000);
+	HAL_Delay(1500);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command16,strlen(Command16),1000);
+	HAL_Delay(750);
 }
 /*
 void reset_array()

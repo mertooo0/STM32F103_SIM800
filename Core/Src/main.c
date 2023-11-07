@@ -167,7 +167,14 @@ int main(void)
 	  HAL_GPIO_TogglePin(Blink_GPIO_Port,Blink_Pin);
 	//  check_val=test();
       //check_val=test2();
-      test3();
+
+	  for(int i=0;i<10;i++)
+	  {
+		  SIM800l_Send_Data(i);
+		  HAL_Delay(250);
+	  }
+      HAL_Delay(2000);
+      //test4();
 
   }
   /* USER CODE END 3 */
