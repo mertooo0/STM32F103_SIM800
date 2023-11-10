@@ -37,7 +37,7 @@ uint8_t test()
 	uint8_t ans=0;
 	memset(RxBuffer,0,sizeof(RxBuffer)*strlen(RxBuffer)); //yanlış nedir ?
 
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command1,strlen(Command1),100);//!!HUART1 TX VERİ GÖNDERMİYOR
+	//HAL_UART_Transmit(&huart1,(uint8_t*)Command1,strlen(Command1),100);//!!HUART1 TX VERİ GÖNDERMİYOR
 	//HAL_UART_Receive(&huart1,(uint8_t*)RxBuffer,6, 1000);
 	ans=Check_OK();
 	return ans;
