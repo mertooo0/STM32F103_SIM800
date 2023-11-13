@@ -39,9 +39,12 @@ struct Coordinate//(latitude,longitude)=(enlem,boylam)
 
 // ------------------VARIABLES----------------------
 char GPRMC_Data[100],GPGGA_Data[100];
-bool GPS_Connection_Stat = false;
+bool GPS_Connection_Stat = false;//CHECK GPS CONNECTION
+bool GPS_Location_Data_Received =false;
 
 struct GGA_Str Time;
+struct Coordinate Coord;
+
 // -------------------------------------------------
 uint16_t Strting_point;
 
@@ -68,7 +71,7 @@ void Set_Time()
 
 	uint8_t Comma_Trig=0;
 	uint16_t syc=0;
-/*
+/*  //ESKİ ALGORİTMA ++ÇALIŞIYOR
 	Time.hh = ((GPGGA_Data[7]-'0')*10+(uint8_t)GPGGA_Data[8]-'0')+3; //GMT +3
 	Time.mm = (GPGGA_Data[9]-'0')*10+(uint8_t)GPGGA_Data[10]-'0';
 	Time.ss = (GPGGA_Data[11]-'0')*10+(uint8_t)GPGGA_Data[12]-'0';
@@ -107,9 +110,40 @@ void Send_Time()
 }
 void Set_Location()
 {
-	struct Coordinate Coord;
+
+	uint8_t Comma_Trig=0;
+	uint16_t syc=0;
+
+	while(Comma_Trig<2)//GPGGA_Data bufferındaki verilerin analizi ',' e göre yapılmıştır
+	{
+
+		if(GPGGA_Data[syc]==',')
+		{
 
 
+
+			Comma_Trig++;
+		}
+			syc++;
+	}
+
+
+	if(Comma_Trig==2)
+	{
+		if(GPGGA_Data[syc]==',')//Any very hasn't received yet
+		{
+			GPS_Location_Data_Received = false;
+		}
+		else GPS_Location_Data_Received = true;
+	}
+//YENİ ALGORİTMA -- ',' e göre hesaplanıyor
+/*
+	Coord.latitude= (GPGGA_Data[syc]-'0')*10 + (GPGGA_Data[syc+1]-'0')*1 + (GPGGA_Data[syc+2]-'0')*0.1 + (GPGGA_Data[syc+3]-'0')*0.01 + (GPGGA_Data[syc+4]-'0')*0.001 + (GPGGA_Data[syc+5]-'0')*0.0001 + (GPGGA_Data[syc+6]-'0')*0.00001 + (GPGGA_Data[syc+7]-'0')*0.000001 + (GPGGA_Data[syc+8]-'0')*0.0000001 + (GPGGA_Data[syc+9]-'0')*0.00000001;
+	Coord.L_hemisphere=GPGGA_Data[syc+11];
+	Coord.longitude= (GPGGA_Data[syc+14]-'0')*10 + (GPGGA_Data[syc+15]-'0')*1 + (GPGGA_Data[syc+16]-'0')*0.1 + (GPGGA_Data[syc+17]-'0')*0.01 + (GPGGA_Data[syc+18]-'0')*0.001 + (GPGGA_Data[syc+19]-'0')*0.0001 + (GPGGA_Data[syc+20]-'0')*0.00001 + (GPGGA_Data[syc+21]-'0')*0.000001 + (GPGGA_Data[syc+22]-'0')*0.0000001 + (GPGGA_Data-'0')[syc+23]*0.00000001;
+	Coord.T_hemisphere = GPGGA_Data[syc+25];
+*/
+//----------------------------------
 	Coord.latitude= (GPGGA_Data[17]-'0')*10 + (GPGGA_Data[18]-'0')*1 + (GPGGA_Data[19]-'0')*0.1 + (GPGGA_Data[20]-'0')*0.01 + (GPGGA_Data[21]-'0')*0.001 + (GPGGA_Data[22]-'0')*0.0001 + (GPGGA_Data[23]-'0')*0.00001 + (GPGGA_Data[24]-'0')*0.000001 + (GPGGA_Data[25]-'0')*0.0000001 + (GPGGA_Data[26]-'0')*0.00000001;
 	Coord.L_hemisphere=GPGGA_Data[28];
 	Coord.longitude= (GPGGA_Data[31]-'0')*10 + (GPGGA_Data[32]-'0')*1 + (GPGGA_Data[33]-'0')*0.1 + (GPGGA_Data[34]-'0')*0.01 + (GPGGA_Data[35]-'0')*0.001 + (GPGGA_Data[36]-'0')*0.0001 + (GPGGA_Data[37]-'0')*0.00001 + (GPGGA_Data[38]-'0')*0.000001 + (GPGGA_Data[39]-'0')*0.0000001 + (GPGGA_Data-'0')[40]*0.00000001;
@@ -120,6 +154,11 @@ void Set_Location()
 		GPS_Connection_Stat = true;
 	}
 	else GPS_Connection_Stat = false;
+}
+void Send_Location()
+{
+	//SIM800l_Send_Data(Coord.latitude,Coord.longitude);
+	SIM800l_Send_Location(5.22,9.44);
 }
 
 

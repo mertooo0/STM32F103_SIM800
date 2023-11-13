@@ -24,6 +24,8 @@
 #include <SIM800.h>
 #include "string.h"
 #include <GPS.h>
+#include <Sublib.h>
+#include <stdbool.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,6 +57,14 @@ int  data_cntr=0,step_cntr=0;
 uint8_t check_val=0;
 char Data[100];
 char Buffer[500];
+
+
+//---EXTERN
+
+extern bool GPS_Connection_Stat;
+extern bool GPS_Location_Data_Received;
+extern struct Coordinate Coord;
+extern struct GGA_Str Time;
 
 /* USER CODE END PV */
 
@@ -159,7 +169,8 @@ int main(void)
 	  }*/
       HAL_Delay(2000);
       //test4();
-	  Send_Time();
+	  //Send_Time();
+      Send_Location();
   }
   /* USER CODE END 3 */
 }

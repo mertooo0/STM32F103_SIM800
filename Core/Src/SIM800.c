@@ -32,27 +32,6 @@ char Command1[5]="AT\r\n",
 ;
 //------------------------
 
-uint8_t test()
-{
-	uint8_t ans=0;
-	memset(RxBuffer,0,sizeof(RxBuffer)*strlen(RxBuffer)); //yanlış nedir ?
-
-	//HAL_UART_Transmit(&huart1,(uint8_t*)Command1,strlen(Command1),100);//!!HUART1 TX VERİ GÖNDERMİYOR
-	//HAL_UART_Receive(&huart1,(uint8_t*)RxBuffer,6, 1000);
-	ans=Check_OK();
-	return ans;
-}
-
-
-uint8_t test2()
-{
-	uint8_t ans=0;
-	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
-	HAL_UART_Transmit(&huart1,(uint8_t*)Command15,strlen(Command15),100);
-	ans=Check_OK();
-	return ans;
-}
-
 
 void SIM800_Init()//HER BİR KOMUT İÇİN KONTROL MEKANİZMASI EKLENECEK
 {
@@ -141,10 +120,15 @@ void SIM800l_Send_Data(int val)
 
 }
 
-void test4()
+void SIM800l_Send_Location(float latitude,float longitude)
 {
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIFSR --
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command10,strlen(Command10),1000);
+	HAL_Delay(1000);
 
-
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSPRT=0 --Seri port iletişimini devre dışı bırakır.Cihaz yalnızca AT komutları ile yönlendirilir.
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command11,strlen(Command11),1000);
+	HAL_Delay(1000);
 
 	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSTART=\"TCP\",\"api.thingspeak.com\",\"80\"\r\n
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command12,strlen(Command12),1000);
@@ -154,8 +138,8 @@ void test4()
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command13,strlen(Command13),1000);
 	HAL_Delay(1500);
 
-	char buffer[120];
-	sprintf(buffer,"GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=%d\r\n",59);
+	char buffer[170];
+	sprintf(buffer,"GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=%.2f&field2=%.2f\r\n",latitude,longitude);
 
 
 	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//
@@ -233,4 +217,58 @@ uint8_t Check_OK()
 
 	return ans;
 
+}
+
+//------------------------KULLANILMIYOR -----------------
+
+uint8_t test()
+{
+	uint8_t ans=0;
+	memset(RxBuffer,0,sizeof(RxBuffer)*strlen(RxBuffer)); //yanlış nedir ?
+
+	//HAL_UART_Transmit(&huart1,(uint8_t*)Command1,strlen(Command1),100);//!!HUART1 TX VERİ GÖNDERMİYOR
+	//HAL_UART_Receive(&huart1,(uint8_t*)RxBuffer,6, 1000);
+	ans=Check_OK();
+	return ans;
+}
+
+
+uint8_t test2()
+{
+	uint8_t ans=0;
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command15,strlen(Command15),100);
+	ans=Check_OK();
+	return ans;
+}
+
+
+void test4()
+{
+
+
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSTART=\"TCP\",\"api.thingspeak.com\",\"80\"\r\n
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command12,strlen(Command12),1000);
+	HAL_Delay(1500);//
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIPSEND
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command13,strlen(Command13),1000);
+	HAL_Delay(1500);
+
+	char buffer[120];
+	sprintf(buffer,"GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=%d\r\n",59);
+
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//
+	HAL_UART_Transmit(&huart1,(uint8_t*)buffer,strlen(buffer),1000);
+	HAL_Delay(1500);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command15,strlen(Command15),1000);
+	HAL_Delay(1500);
+
+	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//
+	HAL_UART_Transmit(&huart1,(uint8_t*)Command16,strlen(Command16),1000);
+	HAL_Delay(750);
 }
