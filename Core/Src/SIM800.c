@@ -139,7 +139,7 @@ void SIM800l_Send_Location(float latitude,float longitude)
 	HAL_Delay(1500);
 
 	char buffer[170];
-	sprintf(buffer,"GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=%.2f&field2=%.2f\r\n",latitude,longitude);
+	sprintf(buffer,"GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=%.3f&field2=%.3f\r\n",13.684,85.564);
 
 
 	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//

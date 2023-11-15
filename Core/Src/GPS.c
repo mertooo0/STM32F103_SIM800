@@ -120,8 +120,6 @@ void Set_Location()
 		if(GPGGA_Data[syc]==',')
 		{
 
-
-
 			Comma_Trig++;
 		}
 			syc++;
@@ -158,7 +156,7 @@ void Set_Location()
 void Send_Location()
 {
 	//SIM800l_Send_Data(Coord.latitude,Coord.longitude);
-	SIM800l_Send_Location(5.22,9.44);
+	SIM800l_Send_Location(Coord.latitude,Coord.longitude);
 }
 
 
@@ -265,7 +263,7 @@ uint16_t Sp_finder(uint8_t s_case)
 void Reorder_data(uint16_t sp,uint8_t s_case)
 {
 	uint16_t syc=0;
-	while(Buffer[syc]!='\r'&& Buffer[syc+1]!='\n')
+	while(Buffer[sp]!='\r'&& Buffer[sp+1]!='\n')
 	{
 
 		syc++;

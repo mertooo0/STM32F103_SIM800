@@ -57,6 +57,7 @@ int  data_cntr=0,step_cntr=0;
 uint8_t check_val=0;
 char Data[100];
 char Buffer[500];
+uint8_t tim_cntr=0;
 
 
 //---EXTERN
@@ -90,9 +91,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if(htim == &htim1)
 	{
 		HAL_GPIO_TogglePin(Blink_GPIO_Port,Blink_Pin);
-		Set_Time();
-		Set_Location();
 
+
+
+		tim_cntr++;
+		if(tim_cntr==3)
+		{
+			Set_Time();
+		//	Set_Location();
+			tim_cntr=0;
+		}
 	}
 }
 
@@ -157,20 +165,13 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_Delay(1000);
-	  //HAL_GPIO_TogglePin(Blink_GPIO_Port,Blink_Pin);
-	//  check_val=test();
-      //check_val=test2();
 
-	/* for(int i=0;i<10;i++)
-	  {
-		  SIM800l_Send_Data(i);
-		  HAL_Delay(1250);
-	  }*/
+	  //HAL_GPIO_TogglePin(Blink_GPIO_Port,Blink_Pin);
+
       HAL_Delay(2000);
       //test4();
 	  //Send_Time();
-      Send_Location();
+    //  Send_Location();
   }
   /* USER CODE END 3 */
 }
