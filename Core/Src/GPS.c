@@ -9,11 +9,12 @@
 #include <GPS.h>
 #include <stdbool.h>
 #include <SIM800.h>
+#include <main.h>
 
 extern char Buffer[500];
 extern 	char Data[100];
 extern UART_HandleTypeDef huart2;
-
+extern float x,y;
 
 // ------------------STRUCTURES----------------------
 
@@ -156,7 +157,9 @@ void Set_Location()
 void Send_Location()
 {
 	//SIM800l_Send_Data(Coord.latitude,Coord.longitude);
-	SIM800l_Send_Location(Coord.latitude,Coord.longitude);
+	x=Coord.latitude;
+	y=Coord.longitude;
+	SIM800l_Send_Location();
 }
 
 

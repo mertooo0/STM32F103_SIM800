@@ -59,6 +59,9 @@ char Data[100];
 char Buffer[500];
 uint8_t tim_cntr=0;
 
+//koordinat
+float y=0,x=0;
+
 
 //---EXTERN
 
@@ -98,7 +101,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		if(tim_cntr==3)
 		{
 			Set_Time();
-		//	Set_Location();
+			Set_Location();
 			tim_cntr=0;
 		}
 	}
@@ -171,7 +174,7 @@ int main(void)
       HAL_Delay(2000);
       //test4();
 	  //Send_Time();
-    //  Send_Location();
+      Send_Location();
   }
   /* USER CODE END 3 */
 }

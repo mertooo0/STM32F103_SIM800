@@ -3,13 +3,13 @@
 #include "stm32f1xx_hal.h"
 #include "string.h"
 #include "stdbool.h"
-
+#include "main.h"
 extern UART_HandleTypeDef huart1;
 //extern UART_HandleTypeDef huart2;
 //------Variables----------
 
 extern char RxBuffer[25];
-
+extern float x,y;
 //-------------------------
 //-------COMMANDS---------
 
@@ -120,7 +120,7 @@ void SIM800l_Send_Data(int val)
 
 }
 
-void SIM800l_Send_Location(float latitude,float longitude)
+void SIM800l_Send_Location()
 {
 	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//AT+CIFSR --
 	HAL_UART_Transmit(&huart1,(uint8_t*)Command10,strlen(Command10),1000);
@@ -139,7 +139,7 @@ void SIM800l_Send_Location(float latitude,float longitude)
 	HAL_Delay(1500);
 
 	char buffer[170];
-	sprintf(buffer,"GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=%.3f&field2=%.3f\r\n",13.684,85.564);
+	sprintf(buffer,"GET https://api.thingspeak.com/update?api_key=I7HHP47YNWI8PSM8&field1=%.4f&field2=%.4f\r\n",x,y);
 
 
 	memset(RxBuffer,0,sizeof(char)*strlen(RxBuffer));//
