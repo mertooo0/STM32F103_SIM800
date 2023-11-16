@@ -55,8 +55,8 @@ char RxBuffer[25];
 char ReOrder[10];
 int  data_cntr=0,step_cntr=0;
 uint8_t check_val=0;
-char Data[100];
-char Buffer[500];
+//char Data[100];
+char Buffer[500],Buffer2[500];
 uint8_t tim_cntr=0;
 
 //koordinat
@@ -152,12 +152,13 @@ int main(void)
   MX_TIM1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  SIM800_Init();
+
   HAL_UART_Receive_DMA(&huart2, Buffer, 500);
   HAL_UART_Receive_IT(&huart1, RxBuffer,20);
-  SIM800_Init();
   HAL_TIM_Base_Start_IT(&htim1);
 
-  memset(Data,0,100);
+
  // HAL_UART_Receive_DMA(&huart1, (uint8_t*)RxBuffer,25);
   /* USER CODE END 2 */
 
@@ -174,7 +175,7 @@ int main(void)
       HAL_Delay(2000);
       //test4();
 	  //Send_Time();
-      Send_Location();
+      //Send_Location();
   }
   /* USER CODE END 3 */
 }

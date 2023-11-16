@@ -11,7 +11,7 @@
 #include <SIM800.h>
 #include <main.h>
 
-extern char Buffer[500];
+extern char Buffer[500],Buffer2[500];
 extern 	char Data[100];
 extern UART_HandleTypeDef huart2;
 extern float x,y;
@@ -79,7 +79,7 @@ void Set_Time()
 */
 	Get_GGA();
 
-	while(Comma_Trig<=0)//GPGGA_Data bufferındaki verilerin analizi ',' e göre yapılmıştır
+	while(Comma_Trig<=0)//GPGGA_Data bufferındaki verilerin analizi ',' e göre yapılmıştır --!!! BUFFER BOŞ İSE HATA VERİR !!!
 	{
 		if(GPGGA_Data[syc]==',')
 		{
@@ -100,6 +100,7 @@ void Set_Time()
 
 			Comma_Trig=1;
 		}
+
 
 		syc++;
 	}
@@ -173,28 +174,30 @@ void Get_RMC()//Recommended Minimum Navigation Information
 void Get_GGA()//GLOBAL POSITIONING SYSTEM FIX DATA
 {
 	//HAL_UART_Receive(&huart2,(uint8_t*)Buffer,500, 1000);
+	memcpy(Buffer2,Buffer,500);
 	Reorder_data(Sp_finder(GPGGA),GPGGA);
 }
 
 uint16_t Sp_finder(uint8_t s_case)
 {
+
 	switch(s_case)
 	{
 
 		case 0:  //GPRMC
 			for(int i=0;i<500;i++)
 			{
-				if(Buffer[i]== '$')
+				if(Buffer2[i]== '$')
 				{
-					if(Buffer[i+1]== 'G')
+					if(Buffer2[i+1]== 'G')
 					{
-						if(Buffer[i+2]== 'P')
+						if(Buffer2[i+2]== 'P')
 						{
-							if(Buffer[i+3]== 'R')
+							if(Buffer2[i+3]== 'R')
 							{
-								if(Buffer[i+4]== 'M')
+								if(Buffer2[i+4]== 'M')
 								{
-									if(Buffer[i+5]== 'C')
+									if(Buffer2[i+5]== 'C')
 									{
 										Strting_point=i;
 										return (uint16_t)i;
@@ -216,17 +219,17 @@ uint16_t Sp_finder(uint8_t s_case)
 		case 2://GPGGA
 			for(int i=0;i<500;i++)
 			{
-				if(Buffer[i]== '$')
+				if(Buffer2[i]== '$')
 				{
-					if(Buffer[i+1]== 'G')
+					if(Buffer2[i+1]== 'G')
 					{
-						if(Buffer[i+2]== 'P')
+						if(Buffer2[i+2]== 'P')
 						{
-							if(Buffer[i+3]== 'G')
+							if(Buffer2[i+3]== 'G')
 							{
-								if(Buffer[i+4]== 'G')
+								if(Buffer2[i+4]== 'G')
 								{
-									if(Buffer[i+5]== 'A')
+									if(Buffer2[i+5]== 'A')
 									{
 										Strting_point=i;
 										return (uint16_t)i;
@@ -265,8 +268,9 @@ uint16_t Sp_finder(uint8_t s_case)
 
 void Reorder_data(uint16_t sp,uint8_t s_case)
 {
+
 	uint16_t syc=0;
-	while(Buffer[sp]!='\r'&& Buffer[sp+1]!='\n')
+	while(Buffer2[sp]!='\r'&& Buffer2[sp+1]!='\n')
 	{
 
 		syc++;
@@ -276,7 +280,7 @@ void Reorder_data(uint16_t sp,uint8_t s_case)
 		{
 
 			case 0:
-				GPRMC_Data[syc]=Buffer[sp];
+				GPRMC_Data[syc]=Buffer2[sp];
 				break;
 
 			case 1:
@@ -285,7 +289,7 @@ void Reorder_data(uint16_t sp,uint8_t s_case)
 				break;
 
 			case 2:
-				GPGGA_Data[syc]=Buffer[sp];
+				GPGGA_Data[syc]=Buffer2[sp];
 
 				break;
 
