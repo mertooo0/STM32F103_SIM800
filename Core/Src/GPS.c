@@ -69,7 +69,6 @@ enum
 
 void Set_Time()
 {
-
 	uint8_t Comma_Trig=0;
 	uint16_t syc=0;
 /*  //ESKİ ALGORİTMA ++ÇALIŞIYOR
@@ -88,7 +87,6 @@ void Set_Time()
 				Time.hh=0;
 				Time.mm=0;
 				Time.ss=0;
-
 			}
 
 			else
@@ -100,8 +98,6 @@ void Set_Time()
 
 			Comma_Trig=1;
 		}
-
-
 		syc++;
 	}
 
@@ -112,6 +108,7 @@ void Send_Time()
 }
 void Set_Location()
 {
+	Get_GGA();
 
 	uint8_t Comma_Trig=0;
 	uint16_t syc=0;
@@ -136,24 +133,34 @@ void Set_Location()
 		}
 		else GPS_Location_Data_Received = true;
 	}
-//YENİ ALGORİTMA -- ',' e göre hesaplanıyor
-/*
-	Coord.latitude= (GPGGA_Data[syc]-'0')*10 + (GPGGA_Data[syc+1]-'0')*1 + (GPGGA_Data[syc+2]-'0')*0.1 + (GPGGA_Data[syc+3]-'0')*0.01 + (GPGGA_Data[syc+4]-'0')*0.001 + (GPGGA_Data[syc+5]-'0')*0.0001 + (GPGGA_Data[syc+6]-'0')*0.00001 + (GPGGA_Data[syc+7]-'0')*0.000001 + (GPGGA_Data[syc+8]-'0')*0.0000001 + (GPGGA_Data[syc+9]-'0')*0.00000001;
-	Coord.L_hemisphere=GPGGA_Data[syc+11];
-	Coord.longitude= (GPGGA_Data[syc+14]-'0')*10 + (GPGGA_Data[syc+15]-'0')*1 + (GPGGA_Data[syc+16]-'0')*0.1 + (GPGGA_Data[syc+17]-'0')*0.01 + (GPGGA_Data[syc+18]-'0')*0.001 + (GPGGA_Data[syc+19]-'0')*0.0001 + (GPGGA_Data[syc+20]-'0')*0.00001 + (GPGGA_Data[syc+21]-'0')*0.000001 + (GPGGA_Data[syc+22]-'0')*0.0000001 + (GPGGA_Data-'0')[syc+23]*0.00000001;
-	Coord.T_hemisphere = GPGGA_Data[syc+25];
-*/
-//----------------------------------
-	Coord.latitude= (GPGGA_Data[17]-'0')*10 + (GPGGA_Data[18]-'0')*1 + (GPGGA_Data[19]-'0')*0.1 + (GPGGA_Data[20]-'0')*0.01 + (GPGGA_Data[21]-'0')*0.001 + (GPGGA_Data[22]-'0')*0.0001 + (GPGGA_Data[23]-'0')*0.00001 + (GPGGA_Data[24]-'0')*0.000001 + (GPGGA_Data[25]-'0')*0.0000001 + (GPGGA_Data[26]-'0')*0.00000001;
-	Coord.L_hemisphere=GPGGA_Data[28];
-	Coord.longitude= (GPGGA_Data[31]-'0')*10 + (GPGGA_Data[32]-'0')*1 + (GPGGA_Data[33]-'0')*0.1 + (GPGGA_Data[34]-'0')*0.01 + (GPGGA_Data[35]-'0')*0.001 + (GPGGA_Data[36]-'0')*0.0001 + (GPGGA_Data[37]-'0')*0.00001 + (GPGGA_Data[38]-'0')*0.000001 + (GPGGA_Data[39]-'0')*0.0000001 + (GPGGA_Data-'0')[40]*0.00000001;
-	Coord.T_hemisphere = GPGGA_Data[42];
 
-	if(Coord.L_hemisphere == 'N' || Coord.L_hemisphere == 'S' && Coord.T_hemisphere == 'E'  || Coord.T_hemisphere == 'W')
+	if(GPS_Location_Data_Received == true)
 	{
-		GPS_Connection_Stat = true;
+		if(Coord.L_hemisphere == 'N' || Coord.L_hemisphere == 'S' && Coord.T_hemisphere == 'E'  || Coord.T_hemisphere == 'W')
+		{
+			GPS_Connection_Stat = true;
+
+			//YENİ ALGORİTMA -- ',' e göre hesaplanıyor
+			Coord.latitude= (GPGGA_Data[syc]-'0')*10 + (GPGGA_Data[syc+1]-'0')*1 + (GPGGA_Data[syc+2]-'0')*0.1 + (GPGGA_Data[syc+3]-'0')*0.01 + (GPGGA_Data[syc+4]-'0')*0.001 + (GPGGA_Data[syc+5]-'0')*0.0001 + (GPGGA_Data[syc+6]-'0')*0.00001 + (GPGGA_Data[syc+7]-'0')*0.000001 + (GPGGA_Data[syc+8]-'0')*0.0000001 + (GPGGA_Data[syc+9]-'0')*0.00000001;
+			Coord.L_hemisphere=GPGGA_Data[syc+11];
+			Coord.longitude= (GPGGA_Data[syc+14]-'0')*10 + (GPGGA_Data[syc+15]-'0')*1 + (GPGGA_Data[syc+16]-'0')*0.1 + (GPGGA_Data[syc+17]-'0')*0.01 + (GPGGA_Data[syc+18]-'0')*0.001 + (GPGGA_Data[syc+19]-'0')*0.0001 + (GPGGA_Data[syc+20]-'0')*0.00001 + (GPGGA_Data[syc+21]-'0')*0.000001 + (GPGGA_Data[syc+22]-'0')*0.0000001 + (GPGGA_Data-'0')[syc+23]*0.00000001;
+			Coord.T_hemisphere = GPGGA_Data[syc+25];
+
+/*			//----------------------------------
+			Coord.latitude= (GPGGA_Data[17]-'0')*10 + (GPGGA_Data[18]-'0')*1 + (GPGGA_Data[19]-'0')*0.1 + (GPGGA_Data[20]-'0')*0.01 + (GPGGA_Data[21]-'0')*0.001 + (GPGGA_Data[22]-'0')*0.0001 + (GPGGA_Data[23]-'0')*0.00001 + (GPGGA_Data[24]-'0')*0.000001 + (GPGGA_Data[25]-'0')*0.0000001 + (GPGGA_Data[26]-'0')*0.00000001;
+			Coord.L_hemisphere=GPGGA_Data[28];
+			Coord.longitude= (GPGGA_Data[31]-'0')*10 + (GPGGA_Data[32]-'0')*1 + (GPGGA_Data[33]-'0')*0.1 + (GPGGA_Data[34]-'0')*0.01 + (GPGGA_Data[35]-'0')*0.001 + (GPGGA_Data[36]-'0')*0.0001 + (GPGGA_Data[37]-'0')*0.00001 + (GPGGA_Data[38]-'0')*0.000001 + (GPGGA_Data[39]-'0')*0.0000001 + (GPGGA_Data-'0')[40]*0.00000001;
+			Coord.T_hemisphere = GPGGA_Data[42];
+*/
+		}
+		else
+		{
+			Coord.latitude=0;
+			Coord.longitude=0;
+			GPS_Connection_Stat = false;
+		}
 	}
-	else GPS_Connection_Stat = false;
+
 }
 void Send_Location()
 {
@@ -173,9 +180,12 @@ void Get_RMC()//Recommended Minimum Navigation Information
 
 void Get_GGA()//GLOBAL POSITIONING SYSTEM FIX DATA
 {
-	//HAL_UART_Receive(&huart2,(uint8_t*)Buffer,500, 1000);
+	//HAL_UART_Receive(&huart2,(uint8_t*)Buffer,500, 1000); //uart ile veri alınırken
+	HAL_UART_DMAPause(&huart2);//DMA Pause
 	memcpy(Buffer2,Buffer,500);
 	Reorder_data(Sp_finder(GPGGA),GPGGA);
+	HAL_UART_DMAResume(&huart2);//DMA Resume
+
 }
 
 uint16_t Sp_finder(uint8_t s_case)
@@ -268,33 +278,38 @@ uint16_t Sp_finder(uint8_t s_case)
 
 void Reorder_data(uint16_t sp,uint8_t s_case)
 {
-
 	uint16_t syc=0;
-	while(Buffer2[sp]!='\r'&& Buffer2[sp+1]!='\n')
-	{
 
-		syc++;
+	/*HATA WHİLE'IN SONSUZA KADAR DEVAM ETMESİ*/
+
+	while(Buffer2[sp] !='\n')//&& Buffer2[sp+1]!='\n')
+	{
 		sp++;
 
+		if(sp == 501)
+		{
+			sp=0;
+		}
 		switch(s_case)
 		{
 
 			case 0:
 				GPRMC_Data[syc]=Buffer2[sp];
+				//syc++ koyulması gerekiyor !!!
 				break;
 
-			case 1:
+		    case 1:
 
 
 				break;
 
 			case 2:
 				GPGGA_Data[syc]=Buffer2[sp];
-
+				syc++;//while-switch arasından buraya getirildi
 				break;
 
 
-			case 3:
+		    case 3:
 
 
 				break;
@@ -311,7 +326,15 @@ void Reorder_data(uint16_t sp,uint8_t s_case)
 
 				break;
 
+
+
+		}
+
+		if(Buffer2[sp] !='\n')
+		{
+
 		}
 
 	}
+
 }

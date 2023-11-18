@@ -98,10 +98,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		tim_cntr++;
-		if(tim_cntr==3)
+		if(tim_cntr==3)//Her üç saniyede bir zaman ve konum bilgileri güncelleniyor
 		{
 			Set_Time();
-			Set_Location();
+			//Set_Location();
 			tim_cntr=0;
 		}
 	}
@@ -152,7 +152,7 @@ int main(void)
   MX_TIM1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  SIM800_Init();
+ // SIM800_Init();
 
   HAL_UART_Receive_DMA(&huart2, Buffer, 500);
   HAL_UART_Receive_IT(&huart1, RxBuffer,20);
