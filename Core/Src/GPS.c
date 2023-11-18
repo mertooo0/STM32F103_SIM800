@@ -136,15 +136,17 @@ void Set_Location()
 
 	if(GPS_Location_Data_Received == true)
 	{
+
+		//YENİ ALGORİTMA -- ',' e göre hesaplanıyor
+		Coord.latitude= (GPGGA_Data[syc]-'0')*10 + (GPGGA_Data[syc+1]-'0')*1 + (GPGGA_Data[syc+2]-'0')*0.1 + (GPGGA_Data[syc+3]-'0')*0.01 + (GPGGA_Data[syc+4]-'0')*0.001 + (GPGGA_Data[syc+5]-'0')*0.0001 + (GPGGA_Data[syc+6]-'0')*0.00001 + (GPGGA_Data[syc+7]-'0')*0.000001 + (GPGGA_Data[syc+8]-'0')*0.0000001 + (GPGGA_Data[syc+9]-'0')*0.00000001;
+		Coord.L_hemisphere=GPGGA_Data[syc+11];
+		Coord.longitude= (GPGGA_Data[syc+14]-'0')*10 + (GPGGA_Data[syc+15]-'0')*1 + (GPGGA_Data[syc+16]-'0')*0.1 + (GPGGA_Data[syc+17]-'0')*0.01 + (GPGGA_Data[syc+18]-'0')*0.001 + (GPGGA_Data[syc+19]-'0')*0.0001 + (GPGGA_Data[syc+20]-'0')*0.00001 + (GPGGA_Data[syc+21]-'0')*0.000001 + (GPGGA_Data[syc+22]-'0')*0.0000001 + (GPGGA_Data-'0')[syc+23]*0.00000001;
+		Coord.T_hemisphere = GPGGA_Data[syc+25];
+
 		if(Coord.L_hemisphere == 'N' || Coord.L_hemisphere == 'S' && Coord.T_hemisphere == 'E'  || Coord.T_hemisphere == 'W')
 		{
 			GPS_Connection_Stat = true;
 
-			//YENİ ALGORİTMA -- ',' e göre hesaplanıyor
-			Coord.latitude= (GPGGA_Data[syc]-'0')*10 + (GPGGA_Data[syc+1]-'0')*1 + (GPGGA_Data[syc+2]-'0')*0.1 + (GPGGA_Data[syc+3]-'0')*0.01 + (GPGGA_Data[syc+4]-'0')*0.001 + (GPGGA_Data[syc+5]-'0')*0.0001 + (GPGGA_Data[syc+6]-'0')*0.00001 + (GPGGA_Data[syc+7]-'0')*0.000001 + (GPGGA_Data[syc+8]-'0')*0.0000001 + (GPGGA_Data[syc+9]-'0')*0.00000001;
-			Coord.L_hemisphere=GPGGA_Data[syc+11];
-			Coord.longitude= (GPGGA_Data[syc+14]-'0')*10 + (GPGGA_Data[syc+15]-'0')*1 + (GPGGA_Data[syc+16]-'0')*0.1 + (GPGGA_Data[syc+17]-'0')*0.01 + (GPGGA_Data[syc+18]-'0')*0.001 + (GPGGA_Data[syc+19]-'0')*0.0001 + (GPGGA_Data[syc+20]-'0')*0.00001 + (GPGGA_Data[syc+21]-'0')*0.000001 + (GPGGA_Data[syc+22]-'0')*0.0000001 + (GPGGA_Data-'0')[syc+23]*0.00000001;
-			Coord.T_hemisphere = GPGGA_Data[syc+25];
 
 /*			//----------------------------------
 			Coord.latitude= (GPGGA_Data[17]-'0')*10 + (GPGGA_Data[18]-'0')*1 + (GPGGA_Data[19]-'0')*0.1 + (GPGGA_Data[20]-'0')*0.01 + (GPGGA_Data[21]-'0')*0.001 + (GPGGA_Data[22]-'0')*0.0001 + (GPGGA_Data[23]-'0')*0.00001 + (GPGGA_Data[24]-'0')*0.000001 + (GPGGA_Data[25]-'0')*0.0000001 + (GPGGA_Data[26]-'0')*0.00000001;
@@ -280,13 +282,12 @@ void Reorder_data(uint16_t sp,uint8_t s_case)
 {
 	uint16_t syc=0;
 
-	/*HATA WHİLE'IN SONSUZA KADAR DEVAM ETMESİ*/
 
 	while(Buffer2[sp] !='\n')//&& Buffer2[sp+1]!='\n')
 	{
 		sp++;
 
-		if(sp == 501)
+		if(sp == 501) //500 ü aştıktan sonra while döngüsü sonsuza kadar gidiyor
 		{
 			sp=0;
 		}

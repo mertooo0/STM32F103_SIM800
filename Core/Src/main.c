@@ -101,7 +101,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		if(tim_cntr==3)//Her üç saniyede bir zaman ve konum bilgileri güncelleniyor
 		{
 			Set_Time();
-			//Set_Location();
+			Set_Location();
 			tim_cntr=0;
 		}
 	}
@@ -175,7 +175,7 @@ int main(void)
       HAL_Delay(2000);
       //test4();
 	  //Send_Time();
-      //Send_Location();
+      Send_Location();
   }
   /* USER CODE END 3 */
 }
